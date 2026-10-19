@@ -1,0 +1,9 @@
+# Build-uri CLion / CMake
+cmake-build-*/
+build/
+
+# Setari locale CLion
+.idea/
+
+# Executabile
+*.exe
