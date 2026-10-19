@@ -2,37 +2,47 @@
 
 Proiect hobby, în stil CS50: scheletul vine gata, logica emulatorului o scriu eu.
 
-## Milestone 0: setup
+## Milestone-uri
 
-### 1. Deschide proiectul în CLion
-1. Dezarhivează folderul `chip8-emulator` unde vrei (de exemplu în `Documents\Proiecte`).
-2. CLion → **File → Open** → alege folderul `chip8-emulator` (cel care conține `CMakeLists.txt`).
-3. Dacă CLion întreabă de toolchain, lasă **MinGW (bundled)**, cel inclus în CLion. Nu trebuie instalat nimic separat.
+| # | Conținut | Documentație | Teste |
+|---|---|---|---|
+| 0 | Setup CLion + SDL2 | secțiunea de mai jos | — |
+| 1 | Starea mașinii, fontul, încărcarea ROM-ului | [`docs/milestone1.md`](docs/milestone1.md) | `test_m1` |
 
-### 2. Prima configurare
-La deschidere, CMake descarcă și compilează automat SDL2. Durează 1–3 minute, o singură dată.
-Progresul se vede în fereastra **CMake** de jos. La final trebuie să apară `Build files have been written to...`.
-
-> SDL2 nu se instalează manual: `CMakeLists.txt` îl aduce singur prin `FetchContent`.
-> Avantaj: același proiect se compilează identic pe orice calculator.
-
-### 3. Rulează
-Selectează configurația **chip8** sus-dreapta și apasă ▶ (Run).
-
-**Rezultat corect:**
-- se deschide o fereastră 640×320 cu o tablă de șah alb-negru care se mișcă;
-- în consola CLion apare `SDL 2.32.10 functioneaza. Apasa Esc ca sa inchizi.`;
-- **Esc** sau butonul X închide fereastra.
-
-Dacă vezi toate astea, setup-ul e gata.
-
-### 4. GitHub
+## Structura
 ```
-git init
+chip8-emulator/
+├── CMakeLists.txt     build: nucleul (fără SDL), programul, testele
+├── src/
+│   ├── chip8.h        starea mașinii + interfața nucleului
+│   ├── chip8.c        nucleul emulatorului (C pur, fără SDL)
+│   └── main.c         punctul de intrare
+├── tests/
+│   ├── test.h         mini-framework de testare
+│   └── test_m1.c      testele milestone 1
+├── docs/              documentația fiecărui milestone
+└── roms/timendus/     ROM-uri de test (GPL-3.0, vezi README din folder)
+```
+
+## Setup (milestone 0)
+
+### Deschiderea proiectului în CLion
+1. CLion → **File → Open** → folderul care conține `CMakeLists.txt`.
+2. În fereastra **Open Project Wizard**, lasă setările implicite (Debug, MinGW, Ninja) → **OK**.
+3. La prima configurare, CMake descarcă și compilează automat SDL2 (1–3 minute, o singură dată).
+
+### Configurațiile de rulare
+- **test_m1**: rulează testele. Nu are nevoie de argumente.
+- **chip8**: programul. În **Edit Configurations…** setează:
+  - **Program arguments:** calea ROM-ului, de exemplu `roms/timendus/2-ibm-logo.ch8`
+  - **Working directory:** `$ProjectFileDir$`
+
+### Git
+```
 git add .
-git commit -m "Milestone 0: setup CLion + SDL2"
+git commit -m "descriere scurta"
+git push
 ```
-Apoi creează repo-ul `chip8-emulator` pe GitHub și urmează instrucțiunile de „push an existing repository”.
 
 ## Probleme frecvente
 
@@ -40,13 +50,5 @@ Apoi creează repo-ul `chip8-emulator` pe GitHub și urmează instrucțiunile de
 |---|---|---|
 | Configurarea CMake eșuează la descărcare | Fără internet sau firewall | Verifică conexiunea, apoi **File → Reload CMake Project** |
 | `SDL.h: No such file or directory` | Configurarea CMake n-a terminat | Așteaptă sau dă **Reload CMake Project** |
-| Erori ciudate după ce ai schimbat ceva în CMake | Cache vechi | **Tools → CMake → Reset Cache and Reload Project** |
-
-## Structura
-```
-chip8-emulator/
-├── CMakeLists.txt   configurarea build-ului (SDL2 inclus automat)
-├── src/
-│   └── main.c       milestone 0: test de fereastră
-└── roms/            aici vor sta jocurile (.ch8)
-```
+| `Nu pot deschide roms/...` la rulare | Working directory greșit | Setează `$ProjectFileDir$` în configurația **chip8** |
+| Erori ciudate după modificări în CMake | Cache vechi | **Tools → CMake → Reset Cache and Reload Project** |
